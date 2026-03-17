@@ -1,0 +1,162 @@
+{
+  "title": "Weather Monitor",
+  "timeSettings": {
+    "from": "now-30m",
+    "to": "now",
+    "autoRefresh": "5s"
+  },
+  "variables": [
+    {
+      "kind": "CustomVariable",
+      "spec": {
+        "name": "location",
+        "query": "home,office",
+        "current": {
+          "text": "home",
+          "value": "home"
+        }
+      }
+    }
+  ],
+  "elements": {
+    "temp": {
+      "kind": "Panel",
+      "spec": {
+        "title": "Temperature",
+        "data": {
+          "kind": "QueryGroup",
+          "spec": {
+            "queries": [
+              {
+                "kind": "PanelQuery",
+                "spec": {
+                  "query": {
+                    "datasource": { "name": "Infinity" },
+                    "type": "json",
+                    "source": "url",
+                    "url": "http://api:5273/api/influx/read/graphs?location=${location}",
+                    "parser": "backend",
+                    "columns": [
+                      { "selector": "time", "type": "timestamp" },
+                      { "selector": "temperature", "type": "number" }
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "vizConfig": {
+          "kind": "VizConfig",
+          "spec": {
+            "type": "timeseries"
+          }
+        }
+      }
+    },
+
+    "humidity": {
+      "kind": "Panel",
+      "spec": {
+        "title": "Humidity",
+        "data": {
+          "kind": "QueryGroup",
+          "spec": {
+            "queries": [
+              {
+                "kind": "PanelQuery",
+                "spec": {
+                  "query": {
+                    "datasource": { "name": "Infinity" },
+                    "type": "json",
+                    "source": "url",
+                    "url": "http://api:5273/api/influx/read/graphs?location=${location}",
+                    "parser": "backend",
+                    "columns": [
+                      { "selector": "time", "type": "timestamp" },
+                      { "selector": "humidity", "type": "number" }
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "vizConfig": {
+          "kind": "VizConfig",
+          "spec": {
+            "type": "timeseries"
+          }
+        }
+      }
+    },
+
+    "air": {
+      "kind": "Panel",
+      "spec": {
+        "title": "Air Quality",
+        "data": {
+          "kind": "QueryGroup",
+          "spec": {
+            "queries": [
+              {
+                "kind": "PanelQuery",
+                "spec": {
+                  "query": {
+                    "datasource": { "name": "Infinity" },
+                    "type": "json",
+                    "source": "url",
+                    "url": "http://api:5273/api/influx/read/graphs?location=${location}",
+                    "parser": "backend",
+                    "columns": [
+                      { "selector": "time", "type": "timestamp" },
+                      { "selector": "airQuality", "type": "number" }
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "vizConfig": {
+          "kind": "VizConfig",
+          "spec": {
+            "type": "timeseries"
+          }
+        }
+      }
+    },
+
+    "stats": {
+      "kind": "Panel",
+      "spec": {
+        "title": "Daily Stats",
+        "data": {
+          "kind": "QueryGroup",
+          "spec": {
+            "queries": [
+              {
+                "kind": "PanelQuery",
+                "spec": {
+                  "query": {
+                    "datasource": { "name": "Infinity" },
+                    "type": "json",
+                    "source": "url",
+                    "url": "http://api:5273/api/influx/read/average?week=${__from:date:iso}&location=${location}",
+                    "parser": "backend"
+                  }
+                }
+              }
+            ]
+          }
+        },
+        "vizConfig": {
+          "kind": "VizConfig",
+          "spec": {
+            "type": "barchart"
+          }
+        }
+      }
+    }
+  }
+}
