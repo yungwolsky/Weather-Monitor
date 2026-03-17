@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  influxdb:
+    image: influxdb:2.7
+    container_name: WeatherInflux
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: admin
+      DOCKER_INFLUXDB_INIT_PASSWORD: admin12345
+      DOCKER_INFLUXDB_INIT_ORG: WeatherMonitor
+      DOCKER_INFLUXDB_INIT_BUCKET: WeatherBucket
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: WeatherMonitor12345
+
+  api:
+    build: ../backend
+    container_name: WeatherAPI
+    ports:
+      - "5273:5273"
+    depends_on:
+      - influxdb
+
+  grafana:
+    image: grafana/grafana
+    container_name: WeatherGrafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - influxdb
+      - api
+    environment:
+      - GF_INSTALL_PLUGINS=yesoreyeram-infinity-datasource
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+
+volumes:
+  influxdb_data:
