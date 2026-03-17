@@ -92,7 +92,3 @@ GET /api/influx/read/average?week=2026-03-10&location=home
 * ESP32 must be on same network as your PC (If not, a proper server configuration allowing it should be made)
 * Replace `<YOUR_PC_IP>` in firmware
 * Do NOT use `localhost` in ESP32
-
----
-
-MIT
