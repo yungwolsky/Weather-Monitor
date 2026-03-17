@@ -42,7 +42,7 @@ admin / admin
 
 ---
 
-## 📡 ESP32 Setup
+## ESP32 Setup
 
 Edit:
 
